@@ -1,0 +1,7 @@
+[project]
+name = "boxedin"
+version = "0.1.0"
+description = "A service for generating images from structured sports data."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
