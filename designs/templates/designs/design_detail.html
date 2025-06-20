@@ -1,0 +1,10 @@
+{% extends "designs/base.html" %}
+{% block title %}{{ design.name }}{% endblock %}
+{% block content %}
+<h1 class="mb-4">{{ design.name }}</h1>
+<p>{{ design.description }}</p>
+<p class="text-muted">Size: {{ design.dimensions.width }}x{{ design.dimensions.height }}</p>
+<p>
+  Collection: <a href="{% url 'collection-detail' design.collection.pk %}">{{ design.collection.name }}</a>
+</p>
+{% endblock %}

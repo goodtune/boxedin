@@ -1,0 +1,15 @@
+{% extends "designs/base.html" %}
+{% block title %}Collections{% endblock %}
+{% block content %}
+<h1 class="mb-4">Collections</h1>
+<div class="list-group">
+  {% for collection in collections %}
+  <a href="{% url 'collection-detail' collection.pk %}" class="list-group-item list-group-item-action">
+    <h5 class="mb-1">{{ collection.name }}</h5>
+    <p class="mb-1">{{ collection.description }}</p>
+  </a>
+  {% empty %}
+  <p>No collections available.</p>
+  {% endfor %}
+</div>
+{% endblock %}
