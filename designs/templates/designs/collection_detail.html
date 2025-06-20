@@ -1,0 +1,16 @@
+{% extends "designs/base.html" %}
+{% block title %}{{ collection.name }}{% endblock %}
+{% block content %}
+<h1 class="mb-4">{{ collection.name }}</h1>
+<p class="mb-4">{{ collection.description }}</p>
+<h2 class="mb-3">Designs</h2>
+<div class="list-group">
+  {% for design in designs %}
+  <a href="{% url 'design-detail' design.pk %}" class="list-group-item list-group-item-action">
+    {{ design.name }} ({{ design.dimensions.width }}x{{ design.dimensions.height }})
+  </a>
+  {% empty %}
+  <p>No designs available.</p>
+  {% endfor %}
+</div>
+{% endblock %}
