@@ -13,5 +13,20 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "coverage>=7.9.1",
     "factory-boy>=3.3.3",
+]
+
+[tool.setuptools]
+packages = ["designs", "project"]
+
+[tool.tox]
+requires = ["tox>=4.19"]
+env_list = ["py313", "py312", "py311"]
+
+[tool.tox.env_run_base]
+description = "Run test under {base_python}"
+dependency_groups = ["dev"]
+commands = [
+    ["coverage", "run", "manage.py", "test", "-v2"],
 ]
