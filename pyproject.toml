@@ -5,5 +5,13 @@ description = "A service for generating images from structured sports data."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "attrs>=25.3.0",
+    "cattrs>=25.1.1",
     "django>=5.2.3",
+    "django-markdownfield>=0.11.0",
+]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
 ]
