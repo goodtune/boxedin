@@ -10,10 +10,12 @@ class ModelTests(TestCase):
     def test_collection(self):
         collection = CollectionFactory()
         self.assertQuerySetEqual(Collection.objects.all(), [collection])
+        self.assertEqual(str(collection), collection.name)
 
     def test_design(self):
         design = DesignFactory()
         self.assertQuerySetEqual(Design.objects.all(), [design])
+        self.assertEqual(str(design), design.name)
 
     def test_design_dimensions_type(self):
         DesignFactory(name="Test Design", dimensions=DesignSize(1080, 1920))

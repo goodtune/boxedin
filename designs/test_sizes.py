@@ -12,11 +12,21 @@ from designs.sizes import (
 
 class SizesExtraTests(TestCase):
     def test_design_size_serializer(self):
-        ds = DesignSize(100, 200)
-        ser = DesignSizeSerializer(ds)
-        data, imports = ser.serialize()
-        self.assertEqual('{"width": 100, "height": 200}', data)
-        self.assertEqual({"from designs.sizes import DesignSize"}, imports)
+        test_cases = [
+            (
+                DesignSize(100, 200),
+                (
+                    '{"width": 100, "height": 200}',
+                    {"from designs.sizes import DesignSize"},
+                ),
+            ),
+        ]
+        for ds, (expected_data, expected_imports) in test_cases:
+            with self.subTest(input=ds):
+                ser = DesignSizeSerializer(ds)
+                data, imports = ser.serialize()
+                self.assertEqual(expected_data, data)
+                self.assertEqual(expected_imports, imports)
 
     def test_dimensions_json_encoder(self):
         enc = DimensionsJSONEncoder()
@@ -40,73 +50,73 @@ class SizesExtraTests(TestCase):
 
     def test_dimensions_form_field_prepare_value(self):
         field = DimensionsFormField(choices=[("a", "A")])
-        # DesignSize branch
-        ds = DesignSize(1, 2)
-        self.assertEqual(field.prepare_value(ds), {"width": 1, "height": 2})
-        # str branch (valid JSON)
-        self.assertEqual(
-            field.prepare_value('{"width":3,"height":4}'), {"width": 3, "height": 4}
-        )
+        test_cases = [
+            (DesignSize(1, 2), {"width": 1, "height": 2}),
+            ('{"width":3,"height":4}', {"width": 3, "height": 4}),
+            ("a", "a"),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(input=value):
+                self.assertEqual(field.prepare_value(value), expected)
         # str branch (invalid JSON)
         self.assertIsNotNone(field.prepare_value("notjson"))
-        # fallback to super
-        self.assertEqual(field.prepare_value("a"), "a")
+
+    def test_dimensions_form_field_prepare_value_invalid_json(self):
+        field = DimensionsFormField(choices=[("a", "A")])
+        self.assertIsNotNone(field.prepare_value("notjson"))
 
     def test_dimensions_form_field_to_python(self):
         field = DimensionsFormField(choices=[("a", "A")])
-        # dict branch
-        self.assertEqual(field.to_python({"width": 5, "height": 6}), DesignSize(5, 6))
-        # str branch (valid JSON)
-        self.assertEqual(field.to_python('{"width":7,"height":8}'), DesignSize(7, 8))
+        test_cases = [
+            ({"width": 5, "height": 6}, DesignSize(5, 6)),
+            ('{"width":7,"height":8}', DesignSize(7, 8)),
+            ("a", "a"),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(input=value):
+                self.assertEqual(field.to_python(value), expected)
         # str branch (invalid JSON)
         self.assertIsNotNone(field.to_python("notjson"))
-        # fallback to super
-        self.assertEqual(field.to_python("a"), "a")
+
+    def test_dimensions_form_field_to_python_invalid_json(self):
+        field = DimensionsFormField(choices=[("a", "A")])
+        self.assertIsNotNone(field.to_python("notjson"))
 
     def test_dimensions_field_from_db_value(self):
         field = DimensionsField()
-        # None branch
-        self.assertIsNone(field.from_db_value(None, None, None))
-        # DesignSize branch
-        ds = DesignSize(9, 10)
-        self.assertEqual(field.from_db_value(ds, None, None), ds)
-        # dict branch
-        self.assertEqual(
-            field.from_db_value({"width": 11, "height": 12}, None, None),
-            DesignSize(11, 12),
-        )
-        # str branch (valid JSON)
-        self.assertEqual(
-            field.from_db_value('{"width":13,"height":14}', None, None),
-            DesignSize(13, 14),
-        )
-        # str branch (invalid JSON)
-        self.assertEqual(field.from_db_value("notjson", None, None), "notjson")
+        test_cases = [
+            (None, None),
+            (DesignSize(9, 10), DesignSize(9, 10)),
+            ({"width": 11, "height": 12}, DesignSize(11, 12)),
+            ('{"width":13,"height":14}', DesignSize(13, 14)),
+            ("notjson", "notjson"),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(input=value):
+                self.assertEqual(field.from_db_value(value, None, None), expected)
 
     def test_dimensions_field_to_python(self):
         field = DimensionsField()
-        # None branch
-        self.assertIsNone(field.to_python(None))
-        # DesignSize branch
-        ds = DesignSize(15, 16)
-        self.assertEqual(field.to_python(ds), ds)
-        # dict branch
-        self.assertEqual(
-            field.to_python({"width": 17, "height": 18}), DesignSize(17, 18)
-        )
-        # str branch (valid JSON)
-        self.assertEqual(
-            field.to_python('{"width":19,"height":20}'), DesignSize(19, 20)
-        )
-        # str branch (invalid JSON)
-        self.assertEqual(field.to_python("notjson"), "notjson")
+        test_cases = [
+            (None, None),
+            (DesignSize(15, 16), DesignSize(15, 16)),
+            ({"width": 17, "height": 18}, DesignSize(17, 18)),
+            ('{"width":19,"height":20}', DesignSize(19, 20)),
+            ("notjson", "notjson"),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(input=value):
+                self.assertEqual(field.to_python(value), expected)
 
     def test_dimensions_field_widget_choices(self):
         # No choices
         field = DimensionsField()
         self.assertEqual(field.widget_choices, [])
         # With choices
-        choices = [(DesignSize(21, 22), "Label1"), (DesignSize(23, 24), "Label2")]
+        choices = [
+            (DesignSize(21, 22), "Label1"),
+            (DesignSize(23, 24), "Label2"),
+        ]
         field2 = DimensionsField(choices=choices)
         widget_choices = field2.widget_choices
         self.assertEqual(len(widget_choices), 2)
