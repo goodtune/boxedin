@@ -1,7 +1,9 @@
 from django.forms import modelform_factory
 from django.test import TestCase
 
-from designs.factories import CollectionFactory
+import json
+
+from designs.factories import CollectionFactory, DesignFactory
 from designs.fields import ConfigField, ConfigFormField
 from designs.models import Design
 
@@ -13,7 +15,9 @@ class ConfigFieldTests(TestCase):
 
     def test_form_validates_formset(self):
         collection = CollectionFactory()
-        Form = modelform_factory(Design, fields=["name", "collection", "dimensions", "config"])
+        Form = modelform_factory(
+            Design, fields=["name", "collection", "dimensions", "config"]
+        )
         data = {
             "name": "Cfg",
             "collection": collection.pk,
@@ -31,4 +35,48 @@ class ConfigFieldTests(TestCase):
         self.assertEqual(
             form.cleaned_data["config"],
             {"title": {"class": "django.forms.CharField", "kwargs": {}}},
+        )
+
+    def test_edit_existing_config_add_fields(self):
+        design = DesignFactory()
+        Form = modelform_factory(
+            Design,
+            fields=["name", "collection", "dimensions", "config"],
+        )
+        dims = {
+            "width": design.dimensions.width,
+            "height": design.dimensions.height,
+        }
+        data = {
+            "name": design.name,
+            "collection": design.collection.pk,
+            "dimensions": json.dumps(dims),
+            "config-TOTAL_FORMS": "3",
+            "config-INITIAL_FORMS": "1",
+            "config-MIN_NUM_FORMS": "0",
+            "config-MAX_NUM_FORMS": "1000",
+            "config-0-name": "title",
+            "config-0-class_name": "django.forms.CharField",
+            "config-0-kwargs": '{"max_length": 100}',
+            "config-1-name": "home_score",
+            "config-1-class_name": "django.forms.IntegerField",
+            "config-1-kwargs": "",
+            "config-2-name": "away_score",
+            "config-2-class_name": "django.forms.IntegerField",
+            "config-2-kwargs": "",
+        }
+        form = Form(data=data, instance=design)
+        self.assertTrue(form.is_valid(), form.errors)
+        updated = form.save()
+        self.assertEqual(
+            set(updated.config.keys()),
+            {"title", "home_score", "away_score"},
+        )
+        self.assertEqual(
+            updated.config["home_score"],
+            {"class": "django.forms.IntegerField", "kwargs": {}},
+        )
+        self.assertEqual(
+            updated.config["away_score"],
+            {"class": "django.forms.IntegerField", "kwargs": {}},
         )
