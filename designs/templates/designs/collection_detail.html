@@ -8,14 +8,21 @@
 <h1 class="mb-4">{{ collection.name }}</h1>
 <p class="mb-4">{{ collection.description }}</p>
 <h2 class="mb-3">Designs</h2>
-<div class="list-group">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
   {% for design in designs %}
-  <a href="{% url 'design-detail' collection_pk=collection.pk pk=design.pk %}" class="list-group-item list-group-item-action">
-    <svg class="img-fluid border mb-2" width="{{ design.dimensions.width }}" height="{{ design.dimensions.height }}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ design.dimensions.width }}x{{ design.dimensions.height }}" preserveAspectRatio="none">
-      <rect width="100%" height="100%" fill="#e9ecef"></rect>
-    </svg>
-    {{ design.name }} ({{ design.dimensions.width }}x{{ design.dimensions.height }})
-  </a>
+  <div class="col">
+    <a href="{% url 'design-detail' collection_pk=collection.pk pk=design.pk %}" class="text-decoration-none text-body">
+      <div class="card h-100">
+        <svg class="card-img-top img-fluid border" width="{{ design.dimensions.width }}" height="{{ design.dimensions.height }}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ design.dimensions.width }}x{{ design.dimensions.height }}" preserveAspectRatio="none">
+          <rect width="100%" height="100%" fill="#e9ecef"></rect>
+        </svg>
+        <div class="card-body">
+          <h5 class="card-title mb-1">{{ design.name }}</h5>
+          <p class="card-text text-muted">{{ design.dimensions.width }}x{{ design.dimensions.height }}</p>
+        </div>
+      </div>
+    </a>
+  </div>
   {% empty %}
   <p>No designs available.</p>
   {% endfor %}
