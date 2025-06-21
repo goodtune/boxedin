@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from designs.models import Collection, Design
+from designs.models import Collection, Design, DesignRender
 
 
 @admin.register(Collection)
@@ -16,3 +16,8 @@ class DesignAdmin(admin.ModelAdmin):
     list_display = ("name", "dimensions")
     search_fields = ("name",)
     list_filter = ("dimensions",)
+
+
+@admin.register(DesignRender)
+class DesignRenderAdmin(admin.ModelAdmin):
+    list_display = ("id", "design")
