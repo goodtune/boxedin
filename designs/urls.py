@@ -9,5 +9,9 @@ urlpatterns = [
         views.CollectionDetailView.as_view(),
         name="collection-detail",
     ),
-    path("designs/<uuid:pk>/", views.DesignDetailView.as_view(), name="design-detail"),
+    path(
+        "collections/<uuid:collection_pk>/designs/<uuid:pk>/",
+        views.DesignDetailView.as_view(),
+        name="design-detail",
+    ),
 ]

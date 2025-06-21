@@ -20,8 +20,9 @@ class CollectionViewTests(TestCase):
         self.assertContains(response, self.design.name)
 
     def test_design_detail_view(self):
-        response = self.get("design-detail", pk=self.design.pk)
+        response = self.get(
+            "design-detail", collection_pk=self.collection.pk, pk=self.design.pk
+        )
         self.response_200(response)
         self.assertContains(response, self.design.name)
         self.assertContains(response, self.collection.name)
-

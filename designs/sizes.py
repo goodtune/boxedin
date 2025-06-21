@@ -58,6 +58,15 @@ class DimensionsFormField(forms.ChoiceField):
                 pass
         return super().to_python(value)
 
+    def valid_value(self, value):
+        if isinstance(value, DesignSize):
+            raw = json.dumps(cattrs.unstructure(value))
+            for k, v in self.choices:
+                if value == k or raw == str(k) or str(value) == str(k):
+                    return True
+            return False
+        return super().valid_value(value)
+
 
 class DimensionsField(models.JSONField):
     def __init__(self, *args, **kwargs):
