@@ -1,4 +1,5 @@
 {% extends "designs/base.html" %}
+{% load markdown_extras %}
 {% block title %}Collections{% endblock %}
 {% block breadcrumbs %}
 <li class="breadcrumb-item active" aria-current="page">Collections</li>
@@ -9,7 +10,7 @@
   {% for collection in collections %}
   <a href="{% url 'collection-detail' collection.pk %}" class="list-group-item list-group-item-action">
     <h5 class="mb-1">{{ collection.name }}</h5>
-    <p class="mb-1">{{ collection.description }}</p>
+    <p class="mb-1">{{ collection.description|markdown_to_html }}</p>
   </a>
   {% empty %}
   <p>No collections available.</p>
