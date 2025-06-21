@@ -8,6 +8,14 @@ class CollectionViewTests(TestCase):
         self.collection = CollectionFactory()
         self.design = DesignFactory(collection=self.collection)
 
+    def test_markdown_rendered_as_html(self):
+        self.collection.description = "This **is** bold"
+        self.collection.save()
+
+        response = self.get("collection-detail", pk=self.collection.pk)
+        self.response_200(response)
+        self.assertContains(response, "<strong>is</strong>", html=True)
+
     def test_collection_list_view(self):
         response = self.get("collection-list")
         self.response_200(response)

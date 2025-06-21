@@ -1,4 +1,5 @@
 {% extends "designs/base.html" %}
+{% load markdown_extras %}
 {% block title %}{{ design.name }}{% endblock %}
 {% block breadcrumbs %}
 <li class="breadcrumb-item"><a href="{% url 'collection-list' %}">Collections</a></li>
@@ -10,7 +11,7 @@
 <svg class="img-fluid border mb-3" width="{{ design.dimensions.width }}" height="{{ design.dimensions.height }}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ design.dimensions.width }}x{{ design.dimensions.height }}" preserveAspectRatio="none">
   <rect width="100%" height="100%" fill="#e9ecef"></rect>
 </svg>
-<p>{{ design.description }}</p>
+<p>{{ design.description|markdown_to_html }}</p>
 <p class="text-muted">Size: {{ design.dimensions.width }}x{{ design.dimensions.height }}</p>
 <p>
   Collection: <a href="{% url 'collection-detail' design.collection.pk %}">{{ design.collection.name }}</a>

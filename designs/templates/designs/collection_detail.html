@@ -1,4 +1,5 @@
 {% extends "designs/base.html" %}
+{% load markdown_extras %}
 {% block title %}{{ collection.name }}{% endblock %}
 {% block breadcrumbs %}
 <li class="breadcrumb-item"><a href="{% url 'collection-list' %}">Collections</a></li>
@@ -6,7 +7,7 @@
 {% endblock %}
 {% block content %}
 <h1 class="mb-4">{{ collection.name }}</h1>
-<p class="mb-4">{{ collection.description }}</p>
+<p class="mb-4">{{ collection.description|markdown_to_html }}</p>
 <h2 class="mb-3">Designs</h2>
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
   {% for design in designs %}
