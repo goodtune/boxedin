@@ -25,3 +25,9 @@ class DesignDetailView(DetailView):
     template_name = "designs/design_detail.html"
     context_object_name = "design"
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        collection_pk = self.kwargs.get("collection_pk")
+        if collection_pk:
+            qs = qs.filter(collection__pk=collection_pk)
+        return qs
