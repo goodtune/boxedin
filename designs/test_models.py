@@ -1,7 +1,9 @@
+from django import forms
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from designs.factories import CollectionFactory, DesignFactory
-from designs.models import Collection, Design
+from designs.factories import CollectionFactory, DesignFactory, DesignRenderFactory
+from designs.models import Collection, Design, DesignRender
 from designs.sizes import DesignSize
 
 
@@ -36,3 +38,20 @@ class ModelTests(TestCase):
                 }
             ],
         )
+
+    def test_design_template_clean(self):
+        design = DesignFactory(template="{% if %}")
+        with self.assertRaises(ValidationError):
+            design.full_clean()
+
+    def test_get_config_form_class(self):
+        design = DesignFactory()
+        FormClass = design.get_config_form_class()
+        form = FormClass()
+        self.assertIn("title", form.fields)
+        self.assertIsInstance(form.fields["title"], forms.CharField)
+
+    def test_design_render(self):
+        render = DesignRenderFactory()
+        self.assertIsInstance(render, DesignRender)
+        self.assertEqual(render.template, render.design.template)

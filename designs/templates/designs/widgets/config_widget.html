@@ -1,0 +1,4 @@
+{{ formset.management_form }}
+{% for form in formset.forms %}
+  <fieldset class="config-item">{{ form.as_p }}</fieldset>
+{% endfor %}
