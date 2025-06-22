@@ -2,8 +2,8 @@ import json
 
 from django import forms
 from django.core.serializers.json import DjangoJSONEncoder
-from django.forms import formset_factory, BaseFormSet
 from django.db import models
+from django.forms import BaseFormSet, formset_factory
 
 
 class ConfigItemForm(forms.Form):

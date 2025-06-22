@@ -29,9 +29,9 @@ class DesignConfigurationFormsetTests(TestCase):
         self.assertTrue(formset.is_valid(), formset.errors)
         formset.save()
         design.refresh_from_db()
-        self.assertEqual(design.config, {
-            "title": {"class": "django.forms.CharField", "kwargs": {}}
-        })
+        self.assertEqual(
+            design.config, {"title": {"class": "django.forms.CharField", "kwargs": {}}}
+        )
 
     def test_edit_existing_config_add_fields(self):
         design = DesignFactory()
@@ -51,7 +51,7 @@ class DesignConfigurationFormsetTests(TestCase):
             "config-0-id": str(first.pk),
             "config-0-name": first.name,
             "config-0-field_class": first.field_class,
-            "config-0-field_kwargs": "{\"max_length\": 100}",
+            "config-0-field_kwargs": '{"max_length": 100}',
             "config-1-name": "home_score",
             "config-1-field_class": "django.forms.IntegerField",
             "config-1-field_kwargs": "{}",

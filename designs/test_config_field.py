@@ -1,10 +1,10 @@
+import json
+
 from django.forms import modelform_factory
 from django.test import TestCase
 
-import json
-
 from designs.factories import CollectionFactory, DesignFactory
-from designs.fields import ConfigField, ConfigFormField
+from designs.fields import ConfigField, ConfigFormField, ConfigFormSet
 from designs.models import Design
 
 
@@ -15,9 +15,7 @@ class ConfigFieldTests(TestCase):
 
     def test_form_validates_formset(self):
         collection = CollectionFactory()
-        Form = modelform_factory(
-            Design, fields=["name", "collection", "dimensions", "config"]
-        )
+        Form = modelform_factory(Design, fields=["name", "collection", "dimensions"])
         data = {
             "name": "Cfg",
             "collection": collection.pk,
@@ -32,8 +30,15 @@ class ConfigFieldTests(TestCase):
         }
         form = Form(data=data)
         self.assertTrue(form.is_valid(), form.errors)
+        # config is not a model field, so we can't check form.cleaned_data["config"]
+        # Instead, test ConfigFormField directly
+
+        config_formset = ConfigFormSet(data, prefix="config")
+        self.assertTrue(config_formset.is_valid(), config_formset.errors)
+        config_field = ConfigFormField()
+        config = config_field.clean(config_formset)
         self.assertEqual(
-            form.cleaned_data["config"],
+            config,
             {"title": {"class": "django.forms.CharField", "kwargs": {}}},
         )
 
@@ -41,7 +46,7 @@ class ConfigFieldTests(TestCase):
         design = DesignFactory()
         Form = modelform_factory(
             Design,
-            fields=["name", "collection", "dimensions", "config"],
+            fields=["name", "collection", "dimensions"],
         )
         dims = {
             "width": design.dimensions.width,
@@ -67,16 +72,22 @@ class ConfigFieldTests(TestCase):
         }
         form = Form(data=data, instance=design)
         self.assertTrue(form.is_valid(), form.errors)
-        updated = form.save()
+        # config is not a model field, so we can't check form.cleaned_data["config"]
+        from designs.fields import ConfigFormField, ConfigFormSet
+
+        config_formset = ConfigFormSet(data, prefix="config")
+        self.assertTrue(config_formset.is_valid(), config_formset.errors)
+        config_field = ConfigFormField()
+        config = config_field.clean(config_formset)
         self.assertEqual(
-            set(updated.config.keys()),
+            set(config.keys()),
             {"title", "home_score", "away_score"},
         )
         self.assertEqual(
-            updated.config["home_score"],
+            config["home_score"],
             {"class": "django.forms.IntegerField", "kwargs": {}},
         )
         self.assertEqual(
-            updated.config["away_score"],
+            config["away_score"],
             {"class": "django.forms.IntegerField", "kwargs": {}},
         )

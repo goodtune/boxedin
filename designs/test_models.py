@@ -1,7 +1,6 @@
-from django.test import TestCase
-from django.core.exceptions import ValidationError
-
 from django import forms
+from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from designs.factories import CollectionFactory, DesignFactory, DesignRenderFactory
 from designs.models import Collection, Design, DesignRender

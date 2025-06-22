@@ -1,11 +1,6 @@
 import factory
 
-from designs.models import (
-    Collection,
-    Design,
-    DesignRender,
-    DesignConfiguration,
-)
+from designs.models import Collection, Design, DesignConfiguration, DesignRender
 from designs.sizes import DesignSize
 
 

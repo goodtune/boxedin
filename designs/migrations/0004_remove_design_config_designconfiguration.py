@@ -21,7 +21,6 @@ def copy_config(apps, schema_editor):
             )
 
 
-
 class Migration(migrations.Migration):
 
     dependencies = [

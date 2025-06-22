@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from designs.models import Collection, Design, DesignRender, DesignConfiguration
+from designs.models import Collection, Design, DesignConfiguration, DesignRender
 
 
 @admin.register(Collection)

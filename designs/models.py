@@ -1,24 +1,17 @@
-import json
 import uuid
 
-from django.core.exceptions import ValidationError
-from django.core.serializers.json import DjangoJSONEncoder
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
-from django import forms
 from django.db import models
 from django.db.migrations.writer import MigrationWriter
-from django.template import Context, Template
-from django.utils.module_loading import import_string
 from django.template import Context, Template
 from django.utils.module_loading import import_string
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 
+from designs.fields import ConfigField
 from designs.sizes import DesignSize, DesignSizeSerializer, DimensionsField
-from designs.fields import ConfigField
-from designs.fields import ConfigField
 
 DIMENSIONS = (
     (DesignSize(1080, 1920), "Story"),
