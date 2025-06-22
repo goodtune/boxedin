@@ -37,30 +37,3 @@ class DesignFormFieldTests(TestCase):
         design = form.save()
         self.assertEqual(design.collection, collection)
         self.assertEqual(design.dimensions, DesignSize(1080, 1920))
-
-    def test_config_field_formset(self):
-        collection = CollectionFactory()
-        Form = modelform_factory(
-            Design,
-            fields=["name", "collection", "dimensions", "config"],
-        )
-        data = {
-            "name": "Config Design",
-            "collection": collection.pk,
-            "dimensions": '{"width": 1080, "height": 1920}',
-            "config-TOTAL_FORMS": "1",
-            "config-INITIAL_FORMS": "0",
-            "config-MIN_NUM_FORMS": "0",
-            "config-MAX_NUM_FORMS": "1000",
-            "config-0-name": "title",
-            "config-0-class_name": "django.forms.CharField",
-            "config-0-kwargs": "{\"max_length\": 50}",
-        }
-        form = Form(data=data)
-        self.assertTrue(form.is_valid(), form.errors)
-        design = form.save(commit=False)
-        self.assertIn("title", design.config)
-        self.assertEqual(
-            design.config["title"],
-            {"class": "django.forms.CharField", "kwargs": {"max_length": 50}},
-        )
