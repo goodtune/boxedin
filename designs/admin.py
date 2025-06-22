@@ -19,7 +19,7 @@ class DesignAdmin(admin.ModelAdmin):
 
     class DesignConfigurationInline(admin.TabularInline):
         model = DesignConfiguration
-        extra = 1
+        extra = 0
 
     inlines = [DesignConfigurationInline]
 

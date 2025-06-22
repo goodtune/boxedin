@@ -27,6 +27,12 @@ DIMENSIONS = (
 )
 
 
+class FieldTypes(models.TextChoices):
+    CHAR_FIELD = "django.forms.CharField", "CharField"
+    INT_FIELD = "django.forms.IntegerField", "IntegerField"
+    CHOICE_FIELD = "django.forms.ChoiceField", "ChoiceField"
+
+
 MigrationWriter.register_serializer(DesignSize, DesignSizeSerializer)
 
 
@@ -89,7 +95,12 @@ class DesignConfiguration(models.Model):
         Design, related_name="configurations", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=255)
-    field_class = models.CharField(max_length=255)
+
+    field_class = models.CharField(
+        max_length=255,
+        choices=FieldTypes.choices,
+        default=FieldTypes.CHAR_FIELD,
+    )
     field_kwargs = models.JSONField(default=dict, encoder=DjangoJSONEncoder, blank=True)
 
     class Meta:
@@ -101,9 +112,7 @@ class DesignConfiguration(models.Model):
 
 class DesignRender(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    design = models.ForeignKey(
-        Design, related_name="renders", on_delete=models.CASCADE
-    )
+    design = models.ForeignKey(Design, related_name="renders", on_delete=models.CASCADE)
     template = models.TextField(default="")
     config = ConfigField(default=dict)
     values = models.JSONField(default=dict, encoder=DjangoJSONEncoder)
