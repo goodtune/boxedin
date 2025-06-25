@@ -1,0 +1,37 @@
+{% extends "designs/base.html" %}
+{% load static markdown_extras %}
+
+{% block title %}Fonts{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item active" aria-current="page">Fonts</li>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Fonts</h1>
+<div class="list-group">
+
+{% if grouped_fonts %}
+    {% for group, fonts in grouped_fonts.items %}
+        <h4 class="mt-3 mb-2">{{ group }}</h4>
+        {% for font in fonts|dictsort:"family.en" %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <h5 class="mb-1" style="font-family: '{{ font.family.en }}';">{{ font }}</h5>
+        </a>
+        {% endfor %}
+    {% empty %}
+        <p>No fonts available.</p>
+    {% endfor %}
+{% elif fonts %}
+    {% for font in fonts|dictsort:"family.en" %}
+        <a href="{% querystring family=font.family.en %}" class="list-group-item list-group-item-action">
+            <h5 class="mb-1" style="font-family: '{{ font.family.en }}';">{{ font }}</h5>
+        </a>
+    {% empty %}
+        <p>No fonts available.</p>
+    {% endfor %}
+{% else %}
+    <p>Unexpected error</p>
+{% endif %}
+</div>
+{% endblock %}

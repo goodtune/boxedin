@@ -14,4 +14,5 @@ urlpatterns = [
         views.DesignDetailView.as_view(),
         name="design-detail",
     ),
+    path("fonts/", views.FontListView.as_view(), name="font-list"),
 ]
