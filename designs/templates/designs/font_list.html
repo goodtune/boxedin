@@ -9,29 +9,44 @@
 
 {% block content %}
 <h1 class="mb-4">Fonts</h1>
-<div class="list-group">
+
+<form method="get" class="row gy-2 mb-4">
+    <div class="col-md-auto">{{ form.lang.label_tag }} {{ form.lang }}</div>
+    <div class="col-md-auto">{{ form.family.label_tag }} {{ form.family }}</div>
+    <div class="col-md-auto">{{ form.style.label_tag }} {{ form.style }}</div>
+    <div class="col-md-auto">{{ form.group_by.label_tag }} {{ form.group_by }}</div>
+    <div class="col-md-auto align-self-end">
+        <button type="submit" class="btn btn-primary">Apply</button>
+        <a href="{% url 'font-list' %}" class="btn btn-secondary">Reset</a>
+    </div>
+</form>
 
 {% if grouped_fonts %}
     {% for group, fonts in grouped_fonts.items %}
         <h4 class="mt-3 mb-2">{{ group }}</h4>
+        <div class="list-group mb-3">
         {% for font in fonts|dictsort:"family.en" %}
-        <a href="#" class="list-group-item list-group-item-action">
-            <h5 class="mb-1" style="font-family: '{{ font.family.en }}';">{{ font }}</h5>
-        </a>
+            <div class="list-group-item">
+                <span style="font-family: '{{ font.family.en }}';">{{ font }}</span>
+            </div>
+        {% empty %}
+            <p>No fonts available.</p>
         {% endfor %}
+        </div>
     {% empty %}
         <p>No fonts available.</p>
     {% endfor %}
 {% elif fonts %}
+    <div class="list-group">
     {% for font in fonts|dictsort:"family.en" %}
-        <a href="{% querystring family=font.family.en %}" class="list-group-item list-group-item-action">
-            <h5 class="mb-1" style="font-family: '{{ font.family.en }}';">{{ font }}</h5>
-        </a>
+        <div class="list-group-item">
+            <span style="font-family: '{{ font.family.en }}';">{{ font }}</span>
+        </div>
     {% empty %}
         <p>No fonts available.</p>
     {% endfor %}
+    </div>
 {% else %}
-    <p>Unexpected error</p>
+    <p>No fonts available.</p>
 {% endif %}
-</div>
 {% endblock %}
