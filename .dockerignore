@@ -1,0 +1,10 @@
+.git
+.github
+.tox
+.venv
+.vscode
+**/__pycache__
+*.egg-info
+db.sqlite3
+staticfiles
+assets

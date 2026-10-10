@@ -7,10 +7,14 @@ requires-python = ">=3.11"
 dependencies = [
     "attrs>=25.3.0",
     "cattrs>=25.1.1",
+    "dj-database-url>=3.1.2",
     "django>=5.2.3",
     "django-markdownfield>=0.11.0",
+    "gunicorn>=26.2.0",
     "packaging>=23.2",
+    "psycopg[binary]>=3.3.6",
     "python-fontconfig>=0.6.3",
+    "whitenoise>=6.12.0",
 ]
 
 [dependency-groups]
