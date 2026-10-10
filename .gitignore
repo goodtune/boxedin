@@ -12,3 +12,6 @@ __pycache__/
 .coverage.*
 htmlcov/
 .tox/
+
+# Packaging metadata created when tox builds the project
+*.egg-info/

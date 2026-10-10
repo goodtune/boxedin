@@ -10,6 +10,7 @@ dependencies = [
     "django>=5.2.3",
     "django-markdownfield>=0.11.0",
     "packaging>=23.2",
+    "python-fontconfig>=0.6.3",
 ]
 
 [dependency-groups]
@@ -23,11 +24,13 @@ dev = [
 packages = ["designs", "project"]
 
 [tool.tox]
-requires = ["tox>=4.19"]
+requires = ["tox>=4.19", "tox-uv>=1.11"]
 env_list = ["py313", "py312", "py311"]
 
 [tool.tox.env_run_base]
 description = "Run test under {base_python}"
+# Install from uv.lock so tests run against the locked dependency versions.
+runner = "uv-venv-lock-runner"
 dependency_groups = ["dev"]
 commands = [
     ["coverage", "run", "manage.py", "test", "-v2"],

@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.11"
 
 [[package]]
@@ -47,6 +47,7 @@ dependencies = [
     { name = "django" },
     { name = "django-markdownfield" },
     { name = "packaging" },
+    { name = "python-fontconfig" },
 ]
 
 [package.dev-dependencies]
@@ -63,6 +64,7 @@ requires-dist = [
     { name = "django", specifier = ">=5.2.3" },
     { name = "django-markdownfield", specifier = ">=0.11.0" },
     { name = "packaging", specifier = ">=23.2" },
+    { name = "python-fontconfig", specifier = ">=0.6.3" },
 ]
 
 [package.metadata.requires-dev]
@@ -218,6 +220,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/a1/d4/1fc4078c65507b51b
 wheels = [
     { url = "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484", size = 66469, upload-time = "2025-04-19T11:48:57.875Z" },
 ]
+
+[[package]]
+name = "python-fontconfig"
+version = "0.6.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ea/f0/f43ac1a9914f47905e3887da02ad91d2f821698e8952fa1aa1f293e08c92/python_fontconfig-0.6.3.tar.gz", hash = "sha256:af46e4dc089be55050896d133643e2bdc6070fbfe78a039691ff08948af88c38", size = 117886, upload-time = "2026-08-03T14:39:26.179Z" }
 
 [[package]]
 name = "shortuuid"
