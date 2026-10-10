@@ -45,4 +45,6 @@ ENV PATH="/app/.venv/bin:$PATH" \
     DJANGO_CONFIGURATION=Production
 
 EXPOSE 8000
-CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2", "--access-logfile", "-"]
+CMD ["granian", "--interface", "asginl", "--host", "0.0.0.0", "--port", "8000", \
+     "--workers", "2", "--respawn-failed-workers", "--access-log", \
+     "project.asgi:application"]

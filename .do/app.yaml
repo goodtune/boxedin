@@ -7,6 +7,13 @@
 name: boxedin
 region: sgp1
 
+domains:
+  - domain: boxedin.staging-site.au
+    type: PRIMARY
+    # staging-site.au is hosted on DigitalOcean DNS, so App Platform manages
+    # the record and certificate.
+    zone: staging-site.au
+
 databases:
   - name: db
     engine: PG
@@ -25,12 +32,13 @@ envs:
   - key: DJANGO_SECRET_KEY
     scope: RUN_TIME
     type: SECRET
+  # The custom domain plus the app's default ondigitalocean.app domain.
   - key: DJANGO_ALLOWED_HOSTS
     scope: RUN_TIME
-    value: ${APP_DOMAIN}
+    value: boxedin.staging-site.au,${APP_DOMAIN}
   - key: DJANGO_CSRF_TRUSTED_ORIGINS
     scope: RUN_TIME
-    value: ${APP_URL}
+    value: https://boxedin.staging-site.au,${APP_URL}
 
 services:
   - name: web
