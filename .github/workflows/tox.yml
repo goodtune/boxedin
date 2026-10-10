@@ -1,6 +1,4 @@
 name: Run Tox tests
-# Runs on the self-hosted ephemeral runners (a fresh VM per job), scale set
-# homelab-ubuntu. See goodtune/homelab, docs/runners.md.
 
 on:
   pull_request:
@@ -8,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: homelab-ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v7
