@@ -3,6 +3,8 @@ from django.views.generic.base import View
 import fontconfig
 from django.shortcuts import render
 
+from designs.forms import FontFilterForm
+
 from designs.models import Collection, Design
 
 
@@ -40,26 +42,28 @@ class FontListView(View):
     template_name = "designs/font_list.html"
 
     def get(self, request, *args, **kwargs):
-        filters = {}
-        group_by = request.GET.get("group_by")
+        form = FontFilterForm(request.GET)
+        fonts = []
+        grouped_fonts = None
+        if form.is_valid():
+            filters = form.get_filters()
+            fonts = [fontconfig.FcFont(f) for f in fontconfig.query(**filters)]
+            group_by = form.cleaned_data.get("group_by")
+            if group_by:
+                grouped_fonts = {}
+                for font in fonts:
+                    attr = getattr(font, group_by, {})
+                    if isinstance(attr, dict):
+                        key = attr.get("en") or next(iter(attr.values()), "Unknown")
+                    else:
+                        key = attr or "Unknown"
+                    grouped_fonts.setdefault(key, []).append(font)
+                grouped_fonts = dict(sorted(grouped_fonts.items()))
 
-        # Apply filters based on query parameters
-        for param in ["lang", "family", "style"]:
-            value = request.GET.get(param)
-            if value:
-                filters[param] = value
-
-        # Query fonts using fontconfig with filters
-        fonts = [fontconfig.FcFont(f) for f in fontconfig.query(**filters)]
-
-        # Group fonts if group_by is specified
-        if group_by:
-            grouped_fonts = {}
-            for font in fonts:
-                key = getattr(font, group_by, {}).get("en", "Unknown")
-                grouped_fonts.setdefault(key, []).append(font)
-            context = {"grouped_fonts": grouped_fonts}
-        else:
-            context = {"fonts": fonts}
+        context = {
+            "form": form,
+            "fonts": fonts if grouped_fonts is None else None,
+            "grouped_fonts": grouped_fonts,
+        }
 
         return render(request, self.template_name, context)
