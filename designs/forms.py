@@ -16,6 +16,10 @@ class FontFilterForm(forms.Form):
     ]
     group_by = forms.ChoiceField(required=False, choices=GROUP_CHOICES, label="Group by")
 
+    # fontconfig.query() only accepts these keyword arguments; style is
+    # filtered by FontListView after the query.
+    QUERY_FIELDS = {"lang", "family"}
+
     def get_filters(self) -> dict:
         """Return cleaned filter values suitable for fontconfig.query."""
         if not self.is_valid():
@@ -23,5 +27,5 @@ class FontFilterForm(forms.Form):
         return {
             key: value
             for key, value in self.cleaned_data.items()
-            if key in {"lang", "family", "style"} and value
+            if key in self.QUERY_FIELDS and value
         }

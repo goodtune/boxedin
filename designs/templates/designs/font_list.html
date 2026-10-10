@@ -27,7 +27,7 @@
         <div class="list-group mb-3">
         {% for font in fonts|dictsort:"family.en" %}
             <div class="list-group-item">
-                <span style="font-family: '{{ font.family.en }}';">{{ font }}</span>
+                <span style="font-family: '{{ font.family.en }}';">{{ font.family.en }}</span>
             </div>
         {% empty %}
             <p>No fonts available.</p>
@@ -40,7 +40,7 @@
     <div class="list-group">
     {% for font in fonts|dictsort:"family.en" %}
         <div class="list-group-item">
-            <span style="font-family: '{{ font.family.en }}';">{{ font }}</span>
+            <span style="font-family: '{{ font.family.en }}';">{{ font.family.en }}</span>
         </div>
     {% empty %}
         <p>No fonts available.</p>

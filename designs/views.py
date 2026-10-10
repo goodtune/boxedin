@@ -48,16 +48,19 @@ class FontListView(View):
         if form.is_valid():
             filters = form.get_filters()
             fonts = [fontconfig.FcFont(f) for f in fontconfig.query(**filters)]
+            style = form.cleaned_data.get("style")
+            if style:
+                fonts = [
+                    font
+                    for font in fonts
+                    if style.casefold() in {s.casefold() for s in font.style.values()}
+                ]
             group_by = form.cleaned_data.get("group_by")
             if group_by:
                 grouped_fonts = {}
                 for font in fonts:
-                    attr = getattr(font, group_by, {})
-                    if isinstance(attr, dict):
-                        key = attr.get("en") or next(iter(attr.values()), "Unknown")
-                    else:
-                        key = attr or "Unknown"
-                    grouped_fonts.setdefault(key, []).append(font)
+                    for key in self.group_keys(font, group_by, filters.get("lang")):
+                        grouped_fonts.setdefault(key, []).append(font)
                 grouped_fonts = dict(sorted(grouped_fonts.items()))
 
         context = {
@@ -67,3 +70,18 @@ class FontListView(View):
         }
 
         return render(request, self.template_name, context)
+
+    @staticmethod
+    def group_keys(font, group_by, lang=None):
+        """Return the group names a font belongs to.
+
+        A font supports many languages, so when grouping by language it is
+        listed under each one (or only the filtered language, if given).
+        """
+        if group_by == "lang":
+            languages = font.get_languages()
+            if lang:
+                languages = [code for code in languages if code == lang]
+            return languages or ["Unknown"]
+        names = getattr(font, group_by, {})
+        return [names.get("en") or next(iter(names.values()), "Unknown")]
