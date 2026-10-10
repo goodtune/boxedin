@@ -16,6 +16,9 @@ databases:
     db_user: boxedin
 
 envs:
+  - key: DJANGO_CONFIGURATION
+    scope: RUN_TIME
+    value: Production
   - key: DATABASE_URL
     scope: RUN_TIME
     value: ${db.DATABASE_URL}

@@ -17,7 +17,13 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY . .
-RUN DJANGO_DEBUG=false DJANGO_SECRET_KEY=collectstatic \
+# Production settings require these at load time; collectstatic uses none of
+# them, so placeholders are enough.
+RUN DJANGO_CONFIGURATION=Production \
+    DJANGO_SECRET_KEY=collectstatic \
+    DJANGO_ALLOWED_HOSTS=localhost \
+    DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost \
+    DATABASE_URL=sqlite:////tmp/collectstatic.sqlite3 \
     /app/.venv/bin/python manage.py collectstatic --noinput
 
 
@@ -36,7 +42,7 @@ USER app
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
-    DJANGO_DEBUG=false
+    DJANGO_CONFIGURATION=Production
 
 EXPOSE 8000
 CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2", "--access-logfile", "-"]
