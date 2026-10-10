@@ -1,1 +1,14 @@
 /db.sqlite3
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+
+# Test and coverage output
+.coverage
+.coverage.*
+htmlcov/
+.tox/
