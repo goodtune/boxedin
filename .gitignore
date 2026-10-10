@@ -15,3 +15,6 @@ htmlcov/
 
 # Packaging metadata created when tox builds the project
 *.egg-info/
+
+# Static files gathered by collectstatic
+/staticfiles/
